@@ -1,4 +1,3 @@
-'use strict'
 const Command = require('command');
 const GameState = require('tera-game-state'); //Requires Caali's proxy :)
 const Vec3 = require('tera-vec3');
@@ -18,7 +17,8 @@ module.exports = function Manapotter(dispatch) {
 		inCombat,
 		playerLocation,
 		playerAngle,
-		currentMp
+		currentMp,
+		maxMp
 		
 	// #############
 	// ### Magic ###
