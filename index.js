@@ -64,7 +64,7 @@ module.exports = function Manapotter(dispatch) {
 		if (!enabled) return
 		if(game.me.alive && inCombat && game.me.mountId == null && !incontract && !inbattleground) {
 			command.message('using pot.')
-			dispatch.toServer('C_USE_ITEM', 2, {
+			dispatch.toServer('C_USE_ITEM', 3, {
 				gameId: game.me.gameId,
 				id: 6562, // 6562: Prime Replenishment Potable, 184659: Everful Nostrum
 				dbid: 0,
