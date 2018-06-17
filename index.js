@@ -42,7 +42,9 @@ module.exports = function Manapotter(dispatch) {
 		maxMp = event.maxMp
 		
 		if(!cooldown && event.target.equals(game.me.gameId) && (currentMp <= maxMp/2)) {
-			useItem()
+			command.message('trying to use item');
+			useItem();
+
 		}
 	})
 
@@ -53,7 +55,7 @@ module.exports = function Manapotter(dispatch) {
 	
 	function useItem() {
 		if (!enabled) return
-		if(game.me.alive && inCombat && game.me.mounted === false && !incontract && !inbattleground) {
+		if(game.me.alive && inCombat && game.me.mountId === null && !incontract && !inbattleground) {
 			dispatch.toServer('C_USE_ITEM', 2, {
 				gameId: game.me.gameId,
 				id: 6562, // 6562: Prime Replenishment Potable, 184659: Everful Nostrum
