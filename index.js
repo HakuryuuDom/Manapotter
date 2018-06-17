@@ -17,7 +17,8 @@ module.exports = function Manapotter(dispatch) {
 		alive,
 		inCombat,
 		playerLocation,
-		playerAngle
+		playerAngle,
+		currentMp
 		
 	// #############
 	// ### Magic ###
