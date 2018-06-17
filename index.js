@@ -42,7 +42,7 @@ module.exports = function Manapotter(dispatch) {
 		maxMp = event.maxMp
 		
 		if(!cooldown && event.target.equals(game.me.gameId) && (currentMp <= maxMp/2)) {
-			command.message('trying to use item');
+			//command.message('trying to use item');
 			useItem();
 
 		}
@@ -52,7 +52,14 @@ module.exports = function Manapotter(dispatch) {
 		playerLocation = event.loc;
 		playerAngle = event.w;
 	})
-	
+	command.add('mpdebug', () => {
+		console.log(game.me.alive);
+		console.log(inCombat);
+		console.log(game.me.mountId);
+		console.log(incontract);
+		console.log(inbattleground);
+		
+	})
 	function useItem() {
 		if (!enabled) return
 		if(game.me.alive && inCombat && game.me.mountId === null && !incontract && !inbattleground) {
@@ -114,5 +121,6 @@ module.exports = function Manapotter(dispatch) {
 			command.message('Manapotter Enabled.');
 		}
 	});
-	this.destructor = () => { command.remove('cn') };
+	this.destructor = () => { command.remove('mppot') };
+	this.destructor = () => { command.remove('mpdebug') };
 };
