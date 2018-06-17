@@ -6,19 +6,14 @@ module.exports = function Manapotter(dispatch) {
 	const game = GameState(dispatch);
 	const command = Command(dispatch);
 
-	let cid = null,
-		player = '',
-		cooldown = false,
+	let cooldown = false,
 		enabled = true,
 		battleground,
 		incontract,
 		inbattleground,
-		alive,
 		inCombat,
 		playerLocation,
-		playerAngle,
-		currentMp,
-		maxMp
+		playerAngle
 		
 	// #############
 	// ### Magic ###
@@ -52,18 +47,11 @@ module.exports = function Manapotter(dispatch) {
 		playerLocation = event.loc;
 		playerAngle = event.w;
 	})
-	command.add('mpdebug', () => {
-		console.log(game.me.alive);
-		console.log(inCombat);
-		console.log(game.me.mountId);
-		console.log(incontract);
-		console.log(inbattleground);
-		
-	})
+	
 	function useItem() {
 		if (!enabled) return
 		if(game.me.alive && inCombat && game.me.mountId == null && !incontract && !inbattleground) {
-			command.message('using pot.')
+			//command.message('using pot.')
 			dispatch.toServer('C_USE_ITEM', 3, {
 				gameId: game.me.gameId,
 				id: 6562, // 6562: Prime Replenishment Potable, 184659: Everful Nostrum
@@ -121,7 +109,9 @@ module.exports = function Manapotter(dispatch) {
 			enabled = true;
 			command.message('Manapotter Enabled.');
 		}
+		else{
+			command.message('Invalid Command.');
+		}
 	});
 	this.destructor = () => { command.remove('mppot') };
-	this.destructor = () => { command.remove('mpdebug') };
 };

@@ -1,5 +1,5 @@
-## :heavy_exclamation_mark: Discontinued :heavy_exclamation_mark:
-Support for this module has been discontinued.  
+## Fork by Haku
+requires command and tera-game-state
 
 # Manapotter  
 A tera-proxy module that automatically uses a Prime Replenishment Potable when below 50% MP.  
