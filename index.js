@@ -50,7 +50,7 @@ module.exports = function Manapotter(dispatch) {
 	
 	function useItem() {
 		if (!enabled) return
-		if(game.me.alive && inCombat && game.me.mountId == null && !incontract && !inbattleground) {
+		if(game.me.alive && inCombat && !game.me.mounted && !incontract && !inbattleground) {
 			//command.message('using pot.')
 			dispatch.toServer('C_USE_ITEM', 3, {
 				gameId: game.me.gameId,
