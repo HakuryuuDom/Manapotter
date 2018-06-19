@@ -11,7 +11,7 @@ module.exports = function Manapotter(dispatch) {
 		battleground,
 		incontract,
 		inbattleground,
-		inCombat,
+		//inCombat,
 		playerLocation,
 		playerAngle
 		
@@ -50,7 +50,7 @@ module.exports = function Manapotter(dispatch) {
 	
 	function useItem() {
 		if (!enabled) return
-		if(game.me.alive && inCombat && !game.me.mounted && !incontract && !inbattleground) {
+		if(game.me.alive && game.me.inCombat && !game.me.mounted && !incontract && !inbattleground) {
 			//command.message('using pot.')
 			dispatch.toServer('C_USE_ITEM', 3, {
 				gameId: game.me.gameId,
@@ -80,15 +80,6 @@ module.exports = function Manapotter(dispatch) {
 		inbattleground = event.zone == battleground
 	})
 	
-	dispatch.hook('S_USER_STATUS', 1, event => { 
-		if(event.target.equals(game.me.gameId)) {
-			if(event.status == 1) {
-				inCombat = true
-			}
-			else inCombat = false
-		}
-	})
-
 	//dispatch.hook('S_MOUNT_VEHICLE', 1, event => { if(event.target.equals(cid)) onmount = true })
 	//dispatch.hook('S_UNMOUNT_VEHICLE', 1, event => { if(event.target.equals(cid)) onmount = false })
 
