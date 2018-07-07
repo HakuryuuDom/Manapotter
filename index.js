@@ -1,19 +1,15 @@
 const Command = require('command');
-const GameState = require('tera-game-state'); //Requires Caali's proxy :)
-const Vec3 = require('tera-vec3');
+const GameState = require('tera-game-state');
 
 module.exports = function Manapotter(dispatch) {
 	const game = GameState(dispatch);
 	const command = Command(dispatch);
+	game.initialize('contract');
 
 	let cooldown = false,
 		enabled = true,
-		battleground,
-		incontract,
-		inbattleground,
-		//inCombat,
 		playerLocation,
-		playerAngle
+		playerAngle;
 		
 	// #############
 	// ### Magic ###
@@ -22,13 +18,12 @@ module.exports = function Manapotter(dispatch) {
 	
 	dispatch.hook('S_START_COOLTIME_ITEM', 1, event => { 
 		let item = event.item
-		let thiscooldown = event.cooldown
 		
 		if(item == 6562) { // has 10 seconds cooldown
 			cooldown = true
 			setTimeout(() => {
-				cooldown = false
-			}, thiscooldown*1000)
+				cooldown = false;
+			}, event.cooldown*1000);
 		}
 	})
 	
@@ -36,7 +31,7 @@ module.exports = function Manapotter(dispatch) {
 		currentMp = event.currentMp
 		maxMp = event.maxMp
 		
-		if(!cooldown && event.target.equals(game.me.gameId) && (currentMp <= maxMp/2)) {
+		if(!cooldown && game.me.is(event.target) && (currentMp <= maxMp/2)) {
 			//command.message('trying to use item');
 			useItem();
 
@@ -49,8 +44,8 @@ module.exports = function Manapotter(dispatch) {
 	})
 	
 	function useItem() {
-		if (!enabled) return
-		if(game.me.alive && game.me.inCombat && !game.me.mounted && !incontract && !inbattleground) {
+		if (!enabled) return;
+		if(game.me.alive && game.me.inCombat && !game.me.mounted && !game.contract.active && !game.me.inBattleground) {
 			//command.message('using pot.')
 			dispatch.toServer('C_USE_ITEM', 3, {
 				gameId: game.me.gameId,
@@ -59,38 +54,16 @@ module.exports = function Manapotter(dispatch) {
 				target: 0,
 				amount: 1,
 				dest: 0,
-				loc: new Vec3(playerLocation),
+				loc: playerLocation,
 				w: playerAngle,
 				unk1: 0,
 				unk2: 0,
 				unk3: 0,
 				unk4: true
 			});
-		}
-	}
-	
-	// ##############
-	// ### Checks ###
-	// ##############
-	
-	dispatch.hook('S_BATTLE_FIELD_ENTRANCE_INFO', 1, event => { battleground = event.zone })
-	dispatch.hook('S_LOAD_TOPO', 3, event => {
-		//onmount = false
-		incontract = false
-		inbattleground = event.zone == battleground
-	})
-	
-	//dispatch.hook('S_MOUNT_VEHICLE', 1, event => { if(event.target.equals(cid)) onmount = true })
-	//dispatch.hook('S_UNMOUNT_VEHICLE', 1, event => { if(event.target.equals(cid)) onmount = false })
+		};
+	};
 
-	dispatch.hook('S_REQUEST_CONTRACT', 1, event => { incontract = true })
-	dispatch.hook('S_ACCEPT_CONTRACT', 1, event => { incontract = false })
-	dispatch.hook('S_REJECT_CONTRACT', 1, event => { incontract = false })
-	dispatch.hook('S_CANCEL_CONTRACT', 1, event => { incontract = false })
-	
-	// #################
-	// ### Chat Hook ###
-	// #################
 	command.add('mppot', () => {
 		if(enabled) {
 			enabled = false;
