@@ -17,31 +17,29 @@ module.exports = function Manapotter(dispatch) {
 	
 	
 	dispatch.hook('S_START_COOLTIME_ITEM', 1, event => { 
-		let item = event.item
-		
-		if(item == 6562) { // has 10 seconds cooldown
-			cooldown = true
+		if(event.item == 6562) { // has 10 seconds cooldown
+			cooldown = true;
 			setTimeout(() => {
 				cooldown = false;
 			}, event.cooldown*1000);
-		}
-	})
-	
+		};
+	});
+
 	dispatch.hook('S_PLAYER_CHANGE_MP', 1, event => {
-		currentMp = event.currentMp
-		maxMp = event.maxMp
+		currentMp = event.currentMp;
+		maxMp = event.maxMp;
 		
 		if(!cooldown && game.me.is(event.target) && (currentMp <= maxMp/2)) {
 			//command.message('trying to use item');
 			useItem();
 
-		}
-	})
+		};
+	});
 
 	dispatch.hook('C_PLAYER_LOCATION', 5, event => {
 		playerLocation = event.loc;
 		playerAngle = event.w;
-	})
+	});
 	
 	function useItem() {
 		if (!enabled) return;
@@ -68,14 +66,14 @@ module.exports = function Manapotter(dispatch) {
 		if(enabled) {
 			enabled = false;
 			command.message('Manapotter disabled.');
-		}
+		};
 		else if(!enabled) {
 			enabled = true;
 			command.message('Manapotter Enabled.');
-		}
+		};
 		else{
 			command.message('Invalid Command.');
-		}
+		};
 	});
 	this.destructor = () => { command.remove('mppot') };
 };
