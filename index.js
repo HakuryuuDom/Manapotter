@@ -66,11 +66,11 @@ module.exports = function Manapotter(dispatch) {
 		if(enabled) {
 			enabled = false;
 			command.message('Manapotter disabled.');
-		};
+		}
 		else if(!enabled) {
 			enabled = true;
 			command.message('Manapotter Enabled.');
-		};
+		}
 		else{
 			command.message('Invalid Command.');
 		};
