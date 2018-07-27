@@ -1,13 +1,7 @@
-const Command = require('command');
-const GameState = require('tera-game-state');
-
-module.exports = function Manapotter(dispatch) {
-	const game = GameState(dispatch);
-	const command = Command(dispatch);
-	game.initialize('contract');
+module.exports = function Manapotter(mod) {
+	mod.game.initialize('contract');
 
 	let cooldown = false,
-		enabled = true,
 		playerLocation,
 		playerAngle;
 		
@@ -16,37 +10,38 @@ module.exports = function Manapotter(dispatch) {
 	// #############
 	
 	
-	dispatch.hook('S_START_COOLTIME_ITEM', 1, event => { 
+	mod.hook('S_START_COOLTIME_ITEM', 1, event => { 
 		if(event.item == 6562) { // has 10 seconds cooldown
 			cooldown = true;
+
 			setTimeout(() => {
-				cooldown = false;
+				cooldown = false
 			}, event.cooldown*1000);
 		};
 	});
 
-	dispatch.hook('S_PLAYER_CHANGE_MP', 1, event => {
+	mod.hook('S_PLAYER_CHANGE_MP', 1, event => {
 		currentMp = event.currentMp;
 		maxMp = event.maxMp;
 		
-		if(!cooldown && game.me.is(event.target) && (currentMp <= maxMp/2)) {
+		if(!cooldown && mod.game.me.is(event.target) && (currentMp <= maxMp/2)) {
 			//command.message('trying to use item');
 			useItem();
 
 		};
 	});
 
-	dispatch.hook('C_PLAYER_LOCATION', 5, event => {
+	mod.hook('C_PLAYER_LOCATION', 5, event => {
 		playerLocation = event.loc;
 		playerAngle = event.w;
 	});
 	
 	function useItem() {
-		if (!enabled) return;
-		if(game.me.alive && game.me.inCombat && !game.me.mounted && !game.contract.active && !game.me.inBattleground) {
+		if (!mod.settings.enabled) return;
+		if(mod.game.me.alive && mod.game.me.inCombat && !mod.game.me.mounted && !mod.game.contract.active && !mod.game.me.inBattleground) {
 			//command.message('using pot.')
-			dispatch.toServer('C_USE_ITEM', 3, {
-				gameId: game.me.gameId,
+			mod.toServer('C_USE_ITEM', 3, {
+				gameId: mod.game.me.gameId,
 				id: 6562, // 6562: Prime Replenishment Potable, 184659: Everful Nostrum
 				dbid: 0,
 				target: 0,
@@ -62,18 +57,11 @@ module.exports = function Manapotter(dispatch) {
 		};
 	};
 
-	command.add('mppot', () => {
-		if(enabled) {
-			enabled = false;
-			command.message('Manapotter disabled.');
-		}
-		else if(!enabled) {
-			enabled = true;
-			command.message('Manapotter Enabled.');
-		}
-		else{
-			command.message('Invalid Command.');
-		};
+	mod.command.add('mppot', () => {
+		mod.settings.enabled = !mod.settings.enabled;
+		//niceName is broken qq
+		mod.command.message('[ManaPotter] Module ' + (mod.settings.enabled ? 'en' : 'dis') + 'abled');
+
 	});
-	this.destructor = () => { command.remove('mppot') };
+	this.destructor = () => { mod.command.remove('mppot') };
 };

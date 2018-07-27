@@ -1,4 +1,11 @@
 {
+	"disableAutoUpdate": false,
+	"options": {
+		"niceName": "ManaPotter",
+		"settingsVersion": 1,
+		"settingsFile": "config.json",
+		"settingsMigrator": "setting_migration.js"
+	},
     "servers": ["https://raw.githubusercontent.com/HakuryuuDom/Manapotter/master/"],
     "supportUrl": "https://discord.gg/maqBmJV"
 }
